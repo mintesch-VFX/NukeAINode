@@ -1,0 +1,206 @@
+{
+  "models": [
+    {
+      "id": "nano_banana_2",
+      "label": "Nano Banana 2 (Image)",
+      "type": "image",
+      "backend": "magnific",
+      "endpoint": "text-to-image/nano-banana-pro-flash",
+      "legal": "green",
+      "eta_sec": 40,
+      "output_ext": "png",
+      "hint": "in1..in4 = reference images (optional)",
+      "input_map": [
+        { "field": "reference_images", "list": true, "wrap": "image", "wrap_static": { "mime_type": "image/png" } },
+        { "field": "reference_images", "list": true, "wrap": "image", "wrap_static": { "mime_type": "image/png" } },
+        { "field": "reference_images", "list": true, "wrap": "image", "wrap_static": { "mime_type": "image/png" } },
+        { "field": "reference_images", "list": true, "wrap": "image", "wrap_static": { "mime_type": "image/png" } }
+      ],
+      "aspect_ratios": ["16:9", "9:16", "1:1"],
+      "default_aspect_ratio": "16:9",
+      "resolutions": ["1K", "2K", "4K"],
+      "default_resolution": "2K",
+      "api_params": { "aspect_ratio": "aspect_ratio", "resolution": "resolution" },
+      "cost": { "unit": "cr", "per_image": { "1K": 75, "2K": 75, "4K": 150 } }
+    },
+    {
+      "id": "gpt_image",
+      "label": "GPT 2 (Image)",
+      "type": "image",
+      "backend": "openai",
+      "openai_model": "gpt-image-2",
+      "endpoint": "generations",
+      "edit_endpoint": "edits",
+      "legal": "green",
+      "eta_sec": 20,
+      "output_ext": "png",
+      "hint": "in1 = image to edit (optional)",
+      "input_map": [
+        { "field": "image" }
+      ],
+      "aspect_ratios": ["16:9", "9:16", "1:1"],
+      "default_aspect_ratio": "16:9",
+      "resolutions": ["2K", "4K"],
+      "default_resolution": "2K",
+      "api_params": {},
+      "cost": { "unit": "usd", "note": "~$0.08 (2K) … ~$0.15 (4K), OpenAI" }
+    },
+    {
+      "id": "seedance_2",
+      "label": "Seedance 2.0 (Video)",
+      "type": "video",
+      "backend": "fal",
+      "endpoint": "bytedance/seedance-2.0/text-to-video",
+      "legal": "yellow",
+      "eta_sec": 90,
+      "output_ext": "mp4",
+      "guide_fps": 24,
+      "modes": [
+        {
+          "label": "Image -> Video",
+          "endpoint": "bytedance/seedance-2.0/image-to-video",
+          "hint": "in1 = start frame, in2 = end frame",
+          "input_map": [
+            { "field": "image_url" },
+            { "field": "end_image_url" }
+          ]
+        },
+        {
+          "label": "Reference -> Video",
+          "endpoint": "bytedance/seedance-2.0/reference-to-video",
+          "hint": "in1+in2 = reference images, in3+in4 = guide videos",
+          "input_map": [
+            { "field": "image_urls", "list": true },
+            { "field": "image_urls", "list": true },
+            { "field": "video_urls", "list": true, "video": true },
+            { "field": "video_urls", "list": true, "video": true }
+          ]
+        },
+        {
+          "label": "Text -> Video",
+          "endpoint": "bytedance/seedance-2.0/text-to-video",
+          "hint": "no inputs; prompt only",
+          "input_map": []
+        }
+      ],
+      "default_mode": "Reference -> Video",
+      "aspect_ratios": ["16:9", "9:16", "1:1"],
+      "default_aspect_ratio": "16:9",
+      "resolutions": ["480p", "720p", "1080p", "4k"],
+      "default_resolution": "1080p",
+      "durations": ["auto", "4", "5", "6", "8", "10", "12"],
+      "default_duration": "5",
+      "api_params": {
+        "aspect_ratio": "aspect_ratio",
+        "resolution": "resolution",
+        "duration": "duration"
+      },
+      "cost": { "unit": "usd", "note": "~$0.30/s (720p, fal), more at 1080p/4k" }
+    },
+    {
+      "id": "gemini_omni",
+      "label": "Gemini Omni Flash (Video)",
+      "type": "video",
+      "backend": "fal",
+      "endpoint": "google/gemini-omni-flash",
+      "legal": "yellow",
+      "eta_sec": 60,
+      "output_ext": "mp4",
+      "guide_fps": 24,
+      "int_params": ["duration"],
+      "modes": [
+        {
+          "label": "Image -> Video",
+          "endpoint": "google/gemini-omni-flash/image-to-video",
+          "hint": "in1 = image to animate",
+          "input_map": [ { "field": "image_url" } ]
+        },
+        {
+          "label": "Reference -> Video",
+          "endpoint": "google/gemini-omni-flash/reference-to-video",
+          "hint": "in1..in4 = reference images",
+          "input_map": [
+            { "field": "image_urls", "list": true },
+            { "field": "image_urls", "list": true },
+            { "field": "image_urls", "list": true },
+            { "field": "image_urls", "list": true }
+          ]
+        },
+        {
+          "label": "Video Edit",
+          "endpoint": "google/gemini-omni-flash/edit",
+          "hint": "in1 = source video to edit (video-to-video)",
+          "input_map": [ { "field": "video_url", "video": true } ],
+          "api_params": {}
+        },
+        {
+          "label": "Text -> Video",
+          "endpoint": "google/gemini-omni-flash",
+          "hint": "no inputs; prompt only",
+          "input_map": []
+        }
+      ],
+      "default_mode": "Video Edit",
+      "aspect_ratios": ["16:9", "9:16"],
+      "default_aspect_ratio": "16:9",
+      "durations": ["4", "6", "8"],
+      "default_duration": "6",
+      "api_params": { "aspect_ratio": "aspect_ratio", "duration": "duration" },
+      "cost": { "unit": "usd", "note": "~$0.10–0.30 / clip (720p, fal)" }
+    },
+    {
+      "id": "kling_3",
+      "label": "Kling 3.0 (Video)",
+      "type": "video",
+      "backend": "magnific",
+      "requires_input": true,
+      "legal": "red",
+      "eta_sec": 300,
+      "output_ext": "mp4",
+      "aspect_ratios": ["16:9", "9:16", "1:1"],
+      "default_aspect_ratio": "16:9",
+      "api_params": {
+        "aspect_ratio": "aspect_ratio",
+        "resolution": "resolution",
+        "duration": "duration"
+      },
+      "cost": { "unit": "cr", "per_sec": { "720p": 70, "1080p": 90, "4K": 400 } },
+      "modes": [
+        {
+          "label": "Start / End frame",
+          "endpoint": "video/kling-v3-pro",
+          "status_endpoint": "video/kling-v3",
+          "hint": "in1 = start frame (required), in2 = end frame, in3+in4 = element images (@Element1/@Element2 in prompt)",
+          "input_map": [
+            { "field": "start_image_url" },
+            { "field": "end_image_url" },
+            { "field": "elements", "list": true, "wrap": "frontal_image_url" },
+            { "field": "elements", "list": true, "wrap": "frontal_image_url" }
+          ],
+          "resolutions": ["720p", "1080p", "4K"],
+          "default_resolution": "1080p",
+          "durations": ["3", "4", "5", "6", "7", "8", "9", "10", "12", "15"],
+          "default_duration": "5"
+        },
+        {
+          "label": "Reference video",
+          "endpoint": "reference-to-video/kling-v3-omni-pro",
+          "status_endpoint": "video/kling-v3-omni",
+          "hint": "in1 = reference video (motion, @Video1, 3-10s), in2 = start frame (optional)",
+          "input_map": [
+            { "field": "video_url", "video": true },
+            { "field": "image_url" }
+          ],
+          "resolutions": ["720p", "1080p"],
+          "default_resolution": "1080p",
+          "durations": ["3", "4", "5", "6", "7", "8", "9", "10"],
+          "default_duration": "5",
+          "ref_video_matches_duration": true,
+          "crop_inputs_to_aspect": true,
+          "guide_fps": 24
+        }
+      ],
+      "default_mode": "Start / End frame"
+    }
+  ]
+}

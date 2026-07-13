@@ -1,0 +1,34 @@
+# --- Secrets / local keys (NEVER commit) ---
+ai_gen_keys.json
+*_keys.json
+*.key
+API_key*.txt
+.env
+.env.*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.idea/
+.vscode/
+
+# --- Nuke ---
+*.nk~
+*.autosave
+*.tmp
+
+# --- Test / generated artifacts ---
+_test_output/
