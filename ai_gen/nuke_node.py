@@ -8,6 +8,7 @@ API-Roundtrip im Hintergrund-Thread, UI/Graph-Updates via nuke.executeInMainThre
 Braucht das Nuke-Python (`import nuke`).
 """
 
+import base64
 import datetime
 import json
 import os
@@ -100,9 +101,7 @@ def build_node():
 
     group.addKnob(nuke.Text_Knob("div_prompt", ""))  # Trennlinie
 
-    # Startwert mit Leerzeilen -> das Prompt-Feld/Panel öffnet höher (statt ~1 Zeile).
-    # Die Leerzeilen werden vor dem Senden gestrippt (siehe generate()).
-    prompt_knob = nuke.Multiline_Eval_String_Knob("prompt", "Prompt", "\n\n\n\n")
+    prompt_knob = nuke.Multiline_Eval_String_Knob("prompt", "Prompt", "")
     prompt_knob.setTooltip("Refer to the connected inputs with @in1..@in4 "
                            "(Kling elements: @Element1/@Element2).")
     group.addKnob(prompt_knob)
@@ -416,7 +415,10 @@ def generate(node):
         prompt_text = node["prompt"].value() or ""
 
         connected = [i for i in range(node.inputs()) if node.input(i) is not None]
-        errors = prompt_mod.validate(prompt_text, len(connected))
+        # 1-basierte Slot-Nummern der belegten Eingänge (mit Lücken, z. B. in1+in3 ->
+        # [1, 3]) — so ist @inN fest an den physischen Slot N gekoppelt.
+        connected_slots = [i + 1 for i in connected]
+        errors = prompt_mod.validate(prompt_text, connected_slots)
         if errors:
             _set_status(node, "Prompt error: " + "; ".join(errors))
             return
@@ -498,7 +500,7 @@ def generate(node):
         if force_duration is not None:
             params["duration"] = force_duration  # an die Referenz-Video-Länge angeglichen
 
-        api_prompt = prompt_mod.resolve_for_api(prompt_text.strip())  # Start-Leerzeilen weg
+        api_prompt = prompt_mod.resolve_for_api(prompt_text.strip())
 
         # Aufgelösten Endpoint/Input-Map in eine Modell-Kopie legen (Backend nutzt sie direkt).
         active = dict(model)
@@ -699,8 +701,15 @@ def _make_result_read(name, posix, is_video, first, last):
 
 def _history_load(node):
     try:
-        raw = node["history"].value() if node.knob("history") else ""
-        data = json.loads(raw) if raw else []
+        stored = node["history"].value() if node.knob("history") else ""
+        if not stored:
+            return []
+        # Neu: base64 (siehe _history_save). Fallback für evtl. alten roh-JSON.
+        try:
+            raw = base64.b64decode(stored.encode("ascii")).decode("utf-8")
+        except Exception:
+            raw = stored
+        data = json.loads(raw)
         return data if isinstance(data, list) else []
     except Exception:
         return []
@@ -708,7 +717,12 @@ def _history_load(node):
 
 def _history_save(node, hist):
     try:
-        node["history"].setValue(json.dumps(hist))
+        # WICHTIG: base64 statt roher JSON. Nukes String_Knob wertet eckige Klammern
+        # [...] als TCL-Ausdruck aus -> roher JSON (beginnt mit "[") wird beim Zurück-
+        # lesen zu "Syntax error ..." zerstört und die History geht verloren. base64
+        # (A-Za-z0-9+/=) enthält keine TCL-Sonderzeichen und überlebt unverändert.
+        enc = base64.b64encode(json.dumps(hist).encode("utf-8")).decode("ascii")
+        node["history"].setValue(enc)
     except Exception:
         pass
 

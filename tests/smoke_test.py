@@ -39,9 +39,12 @@ check("Groß/klein egal", prompt.find_refs("@REF2") == [1])
 check("kein @ref -> []", prompt.find_refs("nur text") == [])
 check(
     "validate meldet zu hohe Referenz",
-    len(prompt.validate("@ref3", num_inputs=1)) == 1,
+    len(prompt.validate("@ref3", 1)) == 1,
 )
 check("validate ok bei genug Eingängen", prompt.validate("@ref1", 2) == [])
+# Lücken-Fall: in1+in3 belegt (in2 leer) -> Slots {1,3}; @in3 muss gültig sein.
+check("validate @in3 ok bei Slots {1,3}", prompt.validate("@in3 in @in1", [1, 3]) == [])
+check("validate @in2 fehlt bei Slots {1,3}", len(prompt.validate("@in2", [1, 3])) == 1)
 
 print("== fal-Hilfsfunktionen (ohne Netz) ==")
 check(

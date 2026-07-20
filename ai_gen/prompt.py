@@ -52,20 +52,26 @@ def resolve_for_api(prompt_text):
     return _REF_PATTERN.sub(_repl, prompt_text or "")
 
 
-def validate(prompt_text, num_inputs):
+def validate(prompt_text, connected):
     """
-    Prüft, ob alle @refN im Prompt auf tatsächlich vorhandene Eingänge zeigen.
+    Prüft, ob alle @inN/@refN im Prompt auf tatsächlich angeschlossene Eingänge zeigen.
+
+    `connected` ist ENTWEDER die Anzahl zusammenhängender Eingänge ab @in1 (int) ODER
+    eine Menge/Liste der wirklich belegten, 1-basierten Slot-Nummern. Letzteres ist
+    wichtig für LÜCKEN: hängt der Nutzer in1 und in3 an (in2 leer), ist `@in3` gültig,
+    weil Slot 3 belegt ist — obwohl nur 2 Eingänge zusammen angeschlossen sind. `@inN`
+    ist also fest an den physischen Slot N gekoppelt, nicht an die Reihenfolge.
 
     Gibt eine Liste menschenlesbarer Fehlermeldungen zurück (leer = alles ok).
     """
+    valid = set(range(1, connected + 1)) if isinstance(connected, int) else set(connected)
     errors = []
     for match in _REF_PATTERN.finditer(prompt_text or ""):
         n = int(match.group(1))
         if n < 1:
             errors.append("@in{n}: Referenzen beginnen bei @in1.".format(n=n))
-        elif n > num_inputs:
+        elif n not in valid:
             errors.append(
-                "@in{n} zeigt auf Eingang {n}, es sind aber nur {have} "
-                "angeschlossen.".format(n=n, have=num_inputs)
+                "@in{n} zeigt auf Eingang {n}, der aber nicht angeschlossen ist.".format(n=n)
             )
     return errors
