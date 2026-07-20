@@ -65,7 +65,8 @@ In the installer you point at one example `.nk` and the base folder where its
 GenAI folder should go. The installer stores the **relative offset** between them,
 so it works for *every* shot without a fixed path.
 
-Example: script `…/FRW_138_030/NK/comp.nk` + base `…/FRW_138_030` → offset `..`.
+Example: script `…/PROJECT/SHOTS/SH010/NK/comp.nk` + base `…/PROJECT/SHOTS/SH010/FOOTAGE`
+→ offset `../FOOTAGE` (so the GenAI folder is created at `…/PROJECT/SHOTS/SH010/FOOTAGE`).
 For any other shot, a `GenAI` folder is created under that base automatically.
 Uploaded inputs go to `…/GenAI/UPLOAD`, results to `…/GenAI/DOWNLOAD`, and each run
 is logged to `generation_log.txt` next to them.

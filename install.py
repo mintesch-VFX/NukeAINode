@@ -35,10 +35,21 @@ KEY_FIELDS = [
 MENU_SNIPPET = '''
 # --- GenAI node (auto-added by install.py) ---
 try:
+    import os as _os
     import nuke
+    import ai_gen as _ai_pkg
     import ai_gen.nuke_node as _ai_node
     _ai_node.install_callbacks()
-    nuke.menu("Nodes").addCommand("GenAI", "import ai_gen.nuke_node as N; N.build_node()")
+    # Icons-Ordner in den Plugin-Pfad; Icon per DATEINAME (Nuke loest Menue-Icons
+    # ueber den Plugin-Pfad auf, absolute Pfade mit Leerzeichen scheitern dabei).
+    _ai_icons = _os.path.join(_os.path.dirname(_ai_pkg.__file__), "icons")
+    if _os.path.isdir(_ai_icons):
+        nuke.pluginAddPath(_ai_icons.replace("\\\\", "/"))
+    nuke.menu("Nodes").addCommand(
+        "GenAI",
+        "import ai_gen.nuke_node as N; N.build_node()",
+        icon="GenAI.png",
+    )
 except Exception as _e:
     try:
         nuke.tprint("GenAI menu failed: %r" % _e)
