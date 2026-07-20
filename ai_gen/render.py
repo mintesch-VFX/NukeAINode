@@ -265,7 +265,12 @@ def render_inputs(node, in_dir, video_indices=(), video_range=None, max_pixels=N
         if rf is not None:
             head = rf
         ocd = make_ocio_display(head, invert=False)
-        writer = nuke.nodes.Write(inputs=[ocd], channels="rgba")
+        # Eingänge OHNE Alpha rausschreiben (nur RGB). Ein mitgeschriebener Alpha-Kanal
+        # (z. B. Matte/Roto/Premult aus dem Comp) führte dazu, dass die API ein teils
+        # transparentes Bild bekam und die Modelle abweichende Ergebnisse lieferten
+        # (ein alpha-respektierender Decoder radiert die transparenten Bereiche aus).
+        # RGB entspricht exakt dem sichtbaren Viewer-Bild und ist für alle Modelle eindeutig.
+        writer = nuke.nodes.Write(inputs=[ocd], channels="rgb")
         try:
             writer["file_type"].setValue("png")
             writer["colorspace"].setValue(RAW_COLORSPACE)  # keine weitere Transform
