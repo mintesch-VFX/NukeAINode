@@ -46,11 +46,11 @@
       "cost": { "unit": "usd", "note": "~$0.08 (2K) … ~$0.15 (4K), OpenAI" }
     },
     {
-      "id": "seedance_2",
-      "label": "Seedance 2.0 (Video)",
+      "id": "seedance_25",
+      "label": "Seedance 2.5 (Video)",
       "type": "video",
       "backend": "fal",
-      "endpoint": "bytedance/seedance-2.0/text-to-video",
+      "endpoint": "bytedance/seedance-2.5/text-to-video",
       "legal": "yellow",
       "eta_sec": 90,
       "output_ext": "mp4",
@@ -58,7 +58,7 @@
       "modes": [
         {
           "label": "Image -> Video",
-          "endpoint": "bytedance/seedance-2.0/image-to-video",
+          "endpoint": "bytedance/seedance-2.5/image-to-video",
           "hint": "in1 = start frame, in2 = end frame",
           "input_map": [
             { "field": "image_url" },
@@ -67,18 +67,18 @@
         },
         {
           "label": "Reference -> Video",
-          "endpoint": "bytedance/seedance-2.0/reference-to-video",
-          "hint": "in1+in2 = reference images, in3+in4 = guide videos",
+          "endpoint": "bytedance/seedance-2.5/reference-to-video",
+          "hint": "in1 = reference video, in2..in4 = reference images",
           "input_map": [
-            { "field": "image_urls", "list": true },
-            { "field": "image_urls", "list": true },
             { "field": "video_urls", "list": true, "video": true },
-            { "field": "video_urls", "list": true, "video": true }
+            { "field": "image_urls", "list": true },
+            { "field": "image_urls", "list": true },
+            { "field": "image_urls", "list": true }
           ]
         },
         {
           "label": "Text -> Video",
-          "endpoint": "bytedance/seedance-2.0/text-to-video",
+          "endpoint": "bytedance/seedance-2.5/text-to-video",
           "hint": "no inputs; prompt only",
           "input_map": []
         }
@@ -88,14 +88,15 @@
       "default_aspect_ratio": "16:9",
       "resolutions": ["480p", "720p", "1080p", "4k"],
       "default_resolution": "1080p",
-      "durations": ["auto", "4", "5", "6", "8", "10", "12"],
+      "durations": ["auto", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"],
       "default_duration": "5",
       "api_params": {
         "aspect_ratio": "aspect_ratio",
         "resolution": "resolution",
         "duration": "duration"
       },
-      "cost": { "unit": "usd", "note": "~$0.30/s (720p, fal), more at 1080p/4k" }
+      "api_static": { "generate_audio": false },
+      "cost": { "unit": "usd", "note": "2.5 pricing not published yet; expect >= 2.0 (~$0.06/s at 720p), clearly more at 4k" }
     },
     {
       "id": "gemini_omni",

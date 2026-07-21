@@ -58,6 +58,11 @@ class FalBackend(Backend):
                     pass
             payload[api_field] = val
 
+        # Konstante API-Felder aus dem Manifest (kein UI-Knob dahinter), z. B.
+        # {"generate_audio": false}. Wird NACH api_params gesetzt und gewinnt daher.
+        for api_field, val in (model_cfg.get("api_static") or {}).items():
+            payload[api_field] = val
+
         # Eingänge per input_map (Index -> API-Feld) einsetzen.
         _apply_inputs(payload, model_cfg.get("input_map", []), inputs, _to_url)
 

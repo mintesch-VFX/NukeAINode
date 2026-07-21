@@ -510,6 +510,8 @@ def generate(node):
         # Mode-spezifische Felder in die Modell-Kopie ziehen (Status-Pfad, guide_fps).
         active["status_endpoint"] = _mode_get(model, node, "status_endpoint")
         active["guide_fps"] = _mode_get(model, node, "guide_fps", 24)
+        # Konstante API-Felder (z. B. generate_audio=false); Mode darf das Modell überschreiben.
+        active["api_static"] = _mode_get(model, node, "api_static")
         # Mode kann eigene api_params vorgeben (z. B. Edit-Endpoint ohne aspect/duration).
         _mode = _current_mode(model, node)
         if _mode is not None and "api_params" in _mode:
