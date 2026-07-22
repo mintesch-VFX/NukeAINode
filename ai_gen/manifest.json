@@ -46,11 +46,11 @@
       "cost": { "unit": "usd", "note": "~$0.08 (2K) … ~$0.15 (4K), OpenAI" }
     },
     {
-      "id": "seedance_25",
-      "label": "Seedance 2.5 (Video)",
+      "id": "seedance_2",
+      "label": "Seedance 2.0 (Video)",
       "type": "video",
       "backend": "fal",
-      "endpoint": "bytedance/seedance-2.5/text-to-video",
+      "endpoint": "bytedance/seedance-2.0/text-to-video",
       "legal": "yellow",
       "eta_sec": 90,
       "output_ext": "mp4",
@@ -58,7 +58,7 @@
       "modes": [
         {
           "label": "Image -> Video",
-          "endpoint": "bytedance/seedance-2.5/image-to-video",
+          "endpoint": "bytedance/seedance-2.0/image-to-video",
           "hint": "in1 = start frame, in2 = end frame",
           "input_map": [
             { "field": "image_url" },
@@ -67,7 +67,7 @@
         },
         {
           "label": "Reference -> Video",
-          "endpoint": "bytedance/seedance-2.5/reference-to-video",
+          "endpoint": "bytedance/seedance-2.0/reference-to-video",
           "hint": "in1 = reference video, in2..in4 = reference images",
           "input_map": [
             { "field": "video_urls", "list": true, "video": true },
@@ -78,7 +78,7 @@
         },
         {
           "label": "Text -> Video",
-          "endpoint": "bytedance/seedance-2.5/text-to-video",
+          "endpoint": "bytedance/seedance-2.0/text-to-video",
           "hint": "no inputs; prompt only",
           "input_map": []
         }
@@ -96,7 +96,7 @@
         "duration": "duration"
       },
       "api_static": { "generate_audio": false },
-      "cost": { "unit": "usd", "note": "2.5 pricing not published yet; expect >= 2.0 (~$0.06/s at 720p), clearly more at 4k" }
+      "cost": { "unit": "usd", "note": "~$0.06/s at 720p (fal), more at 1080p/4k" }
     },
     {
       "id": "gemini_omni",
