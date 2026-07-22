@@ -9,3 +9,5 @@ Die fertige Node läuft eigenständig — ohne Claude, ohne MCP.
 """
 
 __version__ = "0.1.0"
+__author__ = "Min Tesch"
+__copyright__ = "© 2026 Min Tesch"
