@@ -7,6 +7,12 @@ directly inside the comp. Color accurate (ACES), shot aware, standalone.
 
 ## 1. Install (one time)
 
+> **Need Python first?** The installer is a Python program (Nuke's built-in Python
+> does not count). Get a standard one from **python.org** — on Windows, tick
+> **"Add python.exe to PATH"** during setup. Use the python.org build, not the
+> Microsoft Store / Homebrew one, so **Tkinter** (the installer window) is included.
+> On macOS run `python3 install.py`; the `.bat` file is Windows-only.
+
 1. Copy the whole `NukeAINode` folder somewhere on your machine.
 2. Run the installer with any Python:
    ```
@@ -18,7 +24,7 @@ directly inside the comp. Color accurate (ACES), shot aware, standalone.
    - asks for one **example `.nk` script** and the **base folder** where its GenAI
      folder should go, and works out the *relative* path so it applies to every
      shot automatically (see section 3).
-3. Click **Installieren**, then restart Nuke.
+3. Click **Install**, then restart Nuke.
 
 Keys and settings are saved locally in `~/.nuke/ai_gen_keys.json` (this file never
 leaves your machine — do not share it). Re-run `install.py` anytime to change keys

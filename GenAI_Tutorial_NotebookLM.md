@@ -40,6 +40,28 @@ Key ideas:
   `fal-client`, and `imageio-ffmpeg` installed (see section 7). Image generation does
   not need this.
 
+### Getting Python (if you don't have it)
+
+The installer is a small Python program, so you need Python on your machine. **Nuke's
+own built-in Python does not count** — it's internal and not available as a normal
+`python` command. Get a standard one:
+
+**Windows**
+1. Go to **python.org → Downloads** and click **Download Python 3.x**.
+2. Run the installer and — this is the important part — tick **"Add python.exe to
+   PATH"** at the bottom, then click **Install Now**.
+   *Without that checkbox, neither `python install.py` in a terminal nor `install.bat`
+   will work — it's the single most common mistake.*
+3. Verify: open a terminal and run `python --version`. If it prints a version, you're set.
+
+**macOS**
+- Install from **python.org** as well (that installer includes Tkinter, which the
+  installer window needs). Then run `python3 install.py` in Terminal. The `.bat` file
+  is Windows-only.
+
+> Use the **python.org** installer, not the Microsoft Store or Homebrew build — those
+> sometimes ship without **Tkinter**, and the installer window won't open without it.
+
 ## 3. Installation (one time)
 
 1. Copy the whole **`NukeAINode`** folder to your machine.
@@ -192,14 +214,18 @@ connect an image or a clip, write a prompt, and the result comes back into your 
 already in the right color space. Everything runs on your own API keys, so you only pay
 for what you use. Let's set it up and make our first generation."
 
-### Scene 2 — Installation (0:20–0:55)
-**ON SCREEN:** A terminal in the `NukeAINode` folder; typing `python install.py`; the
-installer window opens.
+### Scene 2 — Getting Python & running the installer (0:20–1:05)
+**ON SCREEN:** The python.org download page; the Python installer with the **"Add
+python.exe to PATH"** checkbox highlighted; then a terminal in the `NukeAINode` folder
+typing `python install.py`; the installer window opens.
 **NARRATION:**
-"Installation is a one-time step. Copy the NukeAINode folder to your machine, open a
-terminal inside it, and run: python install dot py. A small window opens. It copies the
-node into your Nuke folder, adds the GenAI menu entry, and stores your settings — all
-locally, on your machine."
+"First you need Python — and note that Nuke's own built-in Python doesn't count here.
+Grab it from python dot org, and when you run its installer, tick the box that says
+'Add python to PATH' at the bottom. That one checkbox saves a lot of headaches — on
+Windows and on Mac. With Python installed, open a terminal in the NukeAINode folder and
+run: python install dot py. A small window opens. It copies the node into your Nuke
+folder, adds the GenAI menu entry, and stores your settings — all locally, on your
+machine."
 
 ### Scene 3 — Entering API keys (0:55–1:30)
 **ON SCREEN:** Filling in the key fields; toggling "Show keys".
