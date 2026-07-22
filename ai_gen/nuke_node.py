@@ -83,6 +83,9 @@ def build_node():
     group.addKnob(nuke.Tab_Knob("ai_tab", "AI Gen"))
 
     model_knob = nuke.Enumeration_Knob("model", "Model", labels)
+    model_knob.setTooltip(
+        "Choose the generative model. Only models whose API key is set appear here.\n\n"
+        "GenAI  ·  © 2026 Min Tesch")
     group.addKnob(model_knob)
 
     legal_knob = nuke.Text_Knob("legal", "Rights", "")
