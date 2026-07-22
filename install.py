@@ -45,10 +45,20 @@ try:
     _ai_icons = _os.path.join(_os.path.dirname(_ai_pkg.__file__), "icons")
     if _os.path.isdir(_ai_icons):
         nuke.pluginAddPath(_ai_icons.replace("\\\\", "/"))
+    # Direkt hinter den Standard-Nodes einsortieren (statt ganz unten bei den
+    # Drittanbietern). "Other" ist der letzte Standard-Eintrag; Index dynamisch
+    # ermitteln, damit es auf jedem Rechner passt (Plugin-Sets sind verschieden).
+    _ai_kw = {"icon": "GenAI.png"}
+    try:
+        _ai_names = [_i.name() for _i in nuke.menu("Nodes").items()]
+        if "Other" in _ai_names:
+            _ai_kw["index"] = _ai_names.index("Other") + 1
+    except Exception:
+        pass
     nuke.menu("Nodes").addCommand(
         "GenAI",
         "import ai_gen.nuke_node as N; N.build_node()",
-        icon="GenAI.png",
+        **_ai_kw
     )
 except Exception as _e:
     try:
